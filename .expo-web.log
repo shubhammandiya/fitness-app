@@ -1,0 +1,27 @@
+npm notice run workout-app@1.0.0 npx
+npm notice run expo start --web --port 8082 --clear
+Starting project at C:\Users\shubh\projects\workout-app
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Starting Metro Bundler
+
+warning: Bundler cache is empty, rebuilding (this may take a minute)
+Waiting on http://localhost:8082
+
+1 package may need updating. Run npx expo install --check for details.
+Logs for your project will appear below.
+Web Bundled 3023ms node_modules\expo-router\entry.js (1043 modules)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  [expo-notifications] Notifications handling is not yet fully supported on web. Handling notifications will have no effect.
+Web  LOG  [ledger] boot {"bootTimedOut": false, "fontError": null, "fontsLoaded": true, "hydrated": true}
+Web Bundled 17ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  [expo-notifications] Notifications handling is not yet fully supported on web. Handling notifications will have no effect.
+Web  LOG  [ledger] boot {"bootTimedOut": false, "fontError": null, "fontsLoaded": true, "hydrated": true}
+Web Bundled 13ms node_modules\expo-router\entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  [expo-notifications] Notifications handling is not yet fully supported on web. Handling notifications will have no effect.
+Web  LOG  [ledger] boot {"bootTimedOut": false, "fontError": null, "fontsLoaded": true, "hydrated": true}
