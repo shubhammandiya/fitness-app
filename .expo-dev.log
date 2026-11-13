@@ -10,3 +10,8 @@ Waiting on http://localhost:8081
 
 1 package may need updating. Run npx expo install --check for details.
 Logs for your project will appear below.
+Android Bundled 2996ms src\app\(tabs)\settings.tsx (779 modules)
+Android Bundled 1465ms src\app\(tabs)\progress.tsx (1563 modules)
+Android Bundled 136ms src\ui\cardio-sheet.tsx (584 modules)
+Android Bundled 5ms src\domain\backup.ts (1 module)
+Android Bundled 125ms src\lib\backup-io.ts (725 modules)
