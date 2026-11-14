@@ -1,56 +1,156 @@
-# Welcome to your Expo app 👋
+# Ledger
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A local-first strength & cardio log for Android. Serif type, one accent colour,
+no accounts, no cloud — everything lives in a single JSON document on your phone.
 
-## Get started
+Built with Expo SDK 58 / React Native / TypeScript.
 
-1. Install dependencies
+![Workout tab](docs/screens/workout.png)
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## Download the app
 
-   ```bash
-   npx expo start
-   ```
+**➡️ [`releases/ledger-android-arm64.apk`](releases/ledger-android-arm64.apk)** (~45 MB, arm64-v8a — every phone made since ~2019)
 
-In the output, you'll find options to open the app in a
+1. Open the file on your phone (or `adb install`).
+2. Android will ask to allow installing from this source — accept.
+3. Launch **Ledger**. No sign-up, nothing to configure.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Prefer not to install an APK? Run it in [Expo Go](https://expo.dev/go) instead — see
+[Run from source](#run-from-source).
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## What it does
 
-When you're ready, run:
+**Plan** — programs → days → exercises. Start from one of four splits
+(Push·Pull·Legs, Upper·Lower, Chest·Back·Arms·Legs·Shoulders, Full body ×3) or build your
+own: rename, duplicate, add/remove days, and set targets per exercise (sets, rep range,
+rest override). One program is active at a time; switching never touches your history.
+
+**Train** — one page per day, swipe between them. Tap a set's number to type the weight,
+or nudge ±2.5 kg / ±1 rep; editing a value follows down to the sets below it. Prefill comes
+from the last time you did that exercise (`LAST · 67.5 KG × 8 · 5 DAYS AGO`), and stale
+history (over 8 weeks) is ignored rather than leading you astray.
+
+**Rest** — the timer starts when you tick a set. `−15 / +15 / skip`, a scheduled
+notification so it fires with the phone locked in your pocket, and vibration at zero.
+Override the rest per exercise in the program editor.
+
+**Review** — weekly hard sets per muscle group, per-exercise top set + estimated 1RM trend
+(Epley), body-weight log with a sparkline, cardio entries, and every finished session in
+detail. All charts are hand-drawn with `react-native-svg` — no chart library.
+
+**Own it** — export a `.json` backup through the share sheet (Drive, Telegram, mail),
+import it back with validation before anything is overwritten, or wipe everything with a
+two-tap confirm. Export = backup = import format.
+
+### Screens
+
+| Progress | Exercise trend |
+| --- | --- |
+| ![Progress](docs/screens/progress.png) | ![Trend](docs/screens/trend.png) |
+
+| Programs | Workout |
+| --- | --- |
+| ![Programs](docs/screens/programs.png) | ![Workout](docs/screens/workout.png) |
+
+---
+
+## Privacy
+
+- No account, no analytics, no network requests. The app never talks to a server.
+- Data is stored with `AsyncStorage` under `ledger-store-v1` and is portable via export.
+- Rest-timer notifications are local (`expo-notifications`), never push.
+
+---
+
+## Run from source
+
+Requirements: Node 20+, npm, and a phone with
+[Expo Go](https://play.google.com/store/apps/details?id=host.exp.exponent) on the same Wi-Fi.
 
 ```bash
-npm run reset-project
+npm install
+npx expo start --lan      # scan the QR code with Expo Go
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Useful: `npx tsc --noEmit` typechecks the project.
 
-### Other setup steps
+---
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Build an APK
 
-## Learn more
+```bash
+npx eas-cli@latest build -p android --profile preview
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+- `eas.json` has a `preview` profile: `buildType: apk`, internal distribution, and
+  `reactNativeArchitectures=arm64-v8a` to keep the file small. Drop that `env` entry for a
+  universal APK (all ABIs, ~114 MB).
+- The project is linked to EAS as `@shubhammandiya/ledger`; the Android keystore lives on
+  Expo's servers, so later builds install over earlier ones.
+- **Windows note:** EAS archives with `git clone file:///C:/…`, which some Git builds can't
+  resolve. Fix once with
+  `git config --global url."file://C:/".insteadOf "file:///C:/"`. Details in
+  [`DECISIONS.md`](DECISIONS.md).
+- EAS ships **committed** state — commit before building.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## Project structure
 
-Join our community of developers creating universal apps.
+```
+src/
+  app/                    expo-router routes
+    (tabs)/index.tsx        Workout — day pager, set logging, rest timer
+    (tabs)/progress.tsx     Progress — muscle sets, body weight, cardio, history
+    (tabs)/programs.tsx     Programs — list, new-program sheet
+    (tabs)/settings.tsx     Settings — theme, accents, backup, clear data
+    program/[id].tsx        program editor (rename, duplicate, delete, days)
+    day/[id].tsx            day editor (targets, add/remove exercises)
+    exercise/[id].tsx       per-exercise 1RM trend
+    session/[id].tsx        finished session detail
+  domain/                 pure logic, no React
+    types.ts                Program / Session / LoggedSet / CardioLog …
+    seed.ts                 70 seeded movements + starter PPL program
+    splits.ts               the four split templates
+    history.ts              last-time lookup, prefill, formatting
+    stats.ts                est. 1RM, sets per muscle, exercise series
+    backup.ts               export document, parse + validate imports
+  state/store.ts          zustand + AsyncStorage, one persisted document
+  ui/                     theme tokens, type scale, tab bar, sheets, chart
+  lib/                    rest notifications, backup I/O
+docs/screens/             README screenshots
+DECISIONS.md              product decisions, design system, gotchas
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Hierarchy: **Program → Day → DayExercise (targets) → Session → LoggedSet**.
+Sessions snapshot exercise names, so editing a program never rewrites history.
+
+---
+
+## Design system
+
+- **Type:** Instrument Serif for titles, exercise names and every numeral (tabular figures);
+  Inter for 9–11 px uppercase micro-labels. Bundled, so it works offline.
+- **Night:** `#0A0A0B` canvas, `#EDEDED` text, lime `#D6FF3F` accent.
+- **Day:** `#F7F6F3` canvas, `#111111` text, accent `#C9EA22` with a darker `accInk`
+  for text so it stays readable on paper.
+- Six accents (lime, rose, sky, amber, violet, mint), hairline rules instead of cards and
+  shadows, 8 pt spacing grid.
+- All tokens live in `src/ui/theme.ts`; screens never hardcode a colour or font name.
+
+---
+
+## Not included (deliberately)
+
+Cloud accounts and sync, social features, Health Connect, GPS cardio, supersets/dropsets/RPE,
+plate calculator, Play Store listing. Cardio is a one-line log by design.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).

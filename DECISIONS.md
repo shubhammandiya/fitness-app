@@ -99,3 +99,26 @@ cd ~/projects/workout-app
 npx expo start --lan      # then scan the QR in Expo Go
 npx tsc --noEmit          # typecheck
 ```
+
+## Build an APK
+
+```
+npx eas-cli@latest build -p android --profile preview
+```
+
+`eas.json` has a `preview` profile (`buildType: apk`, internal distribution).
+The project is linked to EAS as `@shubhammandiya/ledger`; the Android keystore
+lives on Expo's servers.
+
+Windows quirk worth remembering: EAS archives the project with
+`git clone file:///C:/…` (three slashes, hardcoded in its source), and this
+machine's Git cannot resolve that form — it strips the drive letter and reports
+"does not appear to be a git repository". Fixed once per machine with:
+
+```
+git config --global url."file://C:/".insteadOf "file:///C:/"
+```
+
+Undo with `git config --global --unset url.file://C:/.insteadOf`. Also make sure
+the work is **committed** before building — EAS ships committed state, so an
+uncommitted tree builds the old code.
