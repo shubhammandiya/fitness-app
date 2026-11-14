@@ -11,7 +11,7 @@ Built with Expo SDK 58 / React Native / TypeScript.
 
 ## Download the app
 
-**➡️ [`releases/ledger-android-arm64.apk`](releases/ledger-android-arm64.apk)** (~45 MB, arm64-v8a — every phone made since ~2019)
+**➡️ [Download the APK](https://github.com/shubhammandiya/fitness-app/raw/main/releases/ledger-android-arm64.apk)** — 40 MB, arm64-v8a (every phone made since ~2019)
 
 1. Open the file on your phone (or `adb install`).
 2. Android will ask to allow installing from this source — accept.
@@ -87,8 +87,8 @@ npx eas-cli@latest build -p android --profile preview
 ```
 
 - `eas.json` has a `preview` profile: `buildType: apk`, internal distribution, and
-  `reactNativeArchitectures=arm64-v8a` to keep the file small. Drop that `env` entry for a
-  universal APK (all ABIs, ~114 MB).
+  `reactNativeArchitectures=arm64-v8a` to keep the file small (the committed build is
+  40 MB). Drop that `env` entry for a universal APK (all ABIs, ~114 MB).
 - The project is linked to EAS as `@shubhammandiya/ledger`; the Android keystore lives on
   Expo's servers, so later builds install over earlier ones.
 - **Windows note:** EAS archives with `git clone file:///C:/…`, which some Git builds can't
